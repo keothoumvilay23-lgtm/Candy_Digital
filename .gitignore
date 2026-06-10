@@ -23,9 +23,8 @@ __pycache__/
 *.egg-info/
 .venv/
 venv/
-# ===== Build / output tạm của thesis-work =====
-thesis-work/*_out.txt
-thesis-work/docx_dump.txt
+# ===== Thesis-work (bộ công cụ làm báo cáo, không thuộc mã nguồn web app) =====
+thesis-work/
 # ===== Logs & file tạm =====
 *.log
 npm-debug.log*

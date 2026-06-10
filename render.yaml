@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: candy-digital-api
+    runtime: node
+    rootDir: candy-digital/backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      # DB cloud (Aiven/PlanetScale) bắt buộc SSL thì đổi thành "true"
+      - key: DB_SSL
+        value: "false"
+      # Các biến bí mật: để trống ở đây, tự nhập trên dashboard Render khi deploy
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      # 2 URL Vercel (khách + admin) cách nhau bằng dấu phẩy, điền sau khi deploy frontend
+      - key: CLIENT_URL
+        sync: false
