@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f8f8f8;
+  color: #1a1a1a;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-600 transition-colors disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+  .btn-outline {
+    @apply border border-primary text-primary px-4 py-2 rounded-lg font-medium hover:bg-primary-50 transition-colors;
+  }
+  .btn-ghost {
+    @apply text-gray-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors;
+  }
+  .input-field {
+    @apply w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-300 focus:border-primary bg-white;
+  }
+  .card {
+    @apply bg-white rounded-xl border border-gray-100 shadow-sm;
+  }
+  .badge-status-pending   { @apply bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full text-xs font-medium; }
+  .badge-status-confirmed { @apply bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full text-xs font-medium; }
+  .badge-status-shipping  { @apply bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full text-xs font-medium; }
+  .badge-status-done      { @apply bg-green-50 text-green-700 px-2 py-0.5 rounded-full text-xs font-medium; }
+  .badge-status-cancelled { @apply bg-red-50 text-red-700 px-2 py-0.5 rounded-full text-xs font-medium; }
+}

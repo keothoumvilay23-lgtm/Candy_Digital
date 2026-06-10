@@ -1,0 +1,38 @@
+# ===== Dependencies =====
+node_modules/
+**/node_modules/
+# ===== Env / secrets (giữ lại các file .example) =====
+.env
+.env.local
+.env.*.local
+**/.env
+**/.env.local
+!**/.env.example
+!**/.env.local.example
+# ===== Next.js build =====
+.next/
+.next-admin/
+.next-customer/
+next-env.d.ts
+*.tsbuildinfo
+# ===== Uploads (file người dùng tải lên, không nên commit) =====
+candy-digital/backend/uploads/
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+# ===== Build / output tạm của thesis-work =====
+thesis-work/*_out.txt
+thesis-work/docx_dump.txt
+# ===== Logs & file tạm =====
+*.log
+npm-debug.log*
+*.stackdump
+bash.exe.stackdump
+# ===== OS / Editor =====
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

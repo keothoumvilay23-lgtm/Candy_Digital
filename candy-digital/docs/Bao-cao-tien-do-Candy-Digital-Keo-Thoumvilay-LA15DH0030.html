@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Báo cáo tiến độ — Website TMĐT Candy Digital</title>
+  <style>
+    @page { size: A4 portrait; margin: 18mm 20mm 18mm 22mm; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 13pt;
+      line-height: 1.55;
+      color: #111;
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 12mm 16mm 16mm;
+    }
+    h1, h2, h3, h4 { font-weight: bold; line-height: 1.35; }
+    h1 { font-size: 15pt; text-align: center; text-transform: uppercase; margin: 1.2em 0 0.8em; }
+    h2 { font-size: 14pt; margin: 1em 0 0.5em; }
+    h3 { font-size: 13pt; margin: 0.9em 0 0.4em; }
+    h4 { font-size: 13pt; margin: 0.7em 0 0.35em; font-style: italic; }
+    p { margin: 0.35em 0; text-align: justify; }
+    ul, ol { margin: 0.4em 0 0.6em 1.4em; padding: 0; }
+    li { margin: 0.25em 0; text-align: justify; }
+    table { width: 100%; border-collapse: collapse; margin: 0.6em 0; font-size: 12pt; }
+    th, td { border: 1px solid #333; padding: 6px 8px; vertical-align: top; }
+    th { background: #f0f0f0; }
+    .cover-page {
+      min-height: 260mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      text-align: center;
+      page-break-after: always;
+      padding-top: 8mm;
+    }
+    .cover-page img.logo-school {
+      width: 38mm;
+      height: auto;
+      margin-bottom: 8mm;
+    }
+    .cover-line { margin: 0.25em 0; }
+    .cover-title {
+      font-size: 16pt;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 12mm 8mm 6mm;
+      line-height: 1.45;
+    }
+    .cover-sub { font-size: 14pt; font-weight: bold; margin-top: 10mm; }
+    .cover-meta { margin-top: 14mm; text-align: left; width: 100%; max-width: 150mm; font-size: 13pt; }
+    .cover-meta p { margin: 0.5em 0; text-align: left; }
+    .cover-place-date { margin-top: 18mm; width: 100%; text-align: right; padding-right: 10mm; font-size: 13pt; }
+    .toc-item { margin: 0.35em 0; }
+    .sig-block { margin-top: 16mm; display: flex; justify-content: space-between; gap: 12mm; }
+    .sig-col { flex: 1; text-align: center; }
+    .small { font-size: 11.5pt; }
+    .center { text-align: center; }
+    .no-break { page-break-inside: avoid; }
+    code { font-family: Consolas, monospace; font-size: 11.5pt; background: #f5f5f5; padding: 0 3px; }
+    @media print {
+      body { padding: 0; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ========== TRANG BÌA ========== -->
+<div class="cover-page">
+  <img class="logo-school" src="bao-cao-tien-do-assets/logo-dhcnqn.png" alt="Logo Đại học Công nghiệp Quảng Ninh" />
+  <div class="cover-line" style="font-weight:bold;">BỘ CÔNG THƯƠNG</div>
+  <div class="cover-line" style="font-weight:bold;">TRƯỜNG ĐẠI HỌC CÔNG NGHIỆP QUẢNG NINH</div>
+  <div class="cover-line" style="font-weight:bold;">KHOA CÔNG NGHỆ THÔNG TIN</div>
+
+  <div class="cover-title">
+    BÁO CÁO TIẾN ĐỘ THỰC HIỆN ĐỀ TÀI<br />
+    XÂY DỰNG WEBSITE THƯƠNG MẠI ĐIỆN TỬ<br />
+    BÁN ĐIỆN THOẠI &amp; PHỤ KIỆN « CANDY DIGITAL »
+  </div>
+
+  <div class="cover-sub">Giảng viên hướng dẫn: ThS. Nguyễn Thùy Chinh</div>
+
+  <div class="cover-meta">
+    <p><strong>Sinh viên thực hiện:</strong> Keo Thoumvilay</p>
+    <p><strong>Mã sinh viên:</strong> LA15DH0030</p>
+    <p><strong>Lớp:</strong> Công nghệ phần mềm K15</p>
+    <p><strong>Khóa:</strong> 15 &nbsp;|&nbsp; <strong>Năm học:</strong> 2025–2026</p>
+  </div>
+
+  <div class="cover-place-date">
+    <p>Quảng Ninh, tháng 5 năm 2026</p>
+  </div>
+</div>
+
+<!-- ========== LỜI CAM ĐOAN / XÁC NHẬN (ngắn) ========== -->
+<h1>Lời cam đoan</h1>
+<p>Em xin cam đoan báo cáo tiến độ này được xây dựng trên cơ sở khảo sát trực tiếp mã nguồn và tài liệu hướng dẫn cài đặt của đồ án <strong>Candy Digital</strong> trong kho mã <code>candy-digital</code>. Các mô tả về công nghệ, kiến trúc, cơ sở dữ liệu, API và giao diện phản ánh đúng phiên bản hiện tại của dự án. Mọi trích dẫn tham khảo lý thuyết được liệt kê ở phần tài liệu tham khảo.</p>
+<p style="margin-top:1em;"><em>Sinh viên ký tên</em></p>
+<p class="center" style="margin-top:3em;"><strong>Keo Thoumvilay</strong></p>
+
+<div style="page-break-after: always;"></div>
+
+<!-- ========== MỤC LỤC ========== -->
+<h1>Mục lục</h1>
+<div class="toc-item"><strong>Mở đầu</strong> &nbsp;.............................................. &nbsp;1</div>
+<div class="toc-item">&nbsp;&nbsp;1. Tính cấp thiết của đề tài</div>
+<div class="toc-item">&nbsp;&nbsp;2. Mục tiêu nghiên cứu</div>
+<div class="toc-item">&nbsp;&nbsp;3. Đối tượng và phạm vi nghiên cứu</div>
+<div class="toc-item">&nbsp;&nbsp;4. Phương pháp nghiên cứu</div>
+<div class="toc-item"><strong>Chương I.</strong> Tổng quan ngôn ngữ lập trình JavaScript</div>
+<div class="toc-item"><strong>Chương II.</strong> Trí tuệ nhân tạo, chatbot và đặc tả sản phẩm đề tài</div>
+<div class="toc-item"><strong>Chương III.</strong> Khảo sát và phân tích hệ thống</div>
+<div class="toc-item"><strong>Chương IV.</strong> Thiết kế và xây dựng hệ thống</div>
+<div class="toc-item"><strong>Chương V.</strong> Cài đặt, kiểm thử và đánh giá</div>
+<div class="toc-item"><strong>Kết luận và hướng phát triển</strong></div>
+<div class="toc-item"><strong>Danh mục tài liệu tham khảo</strong></div>
+
+<div style="page-break-after: always;"></div>
+
+<!-- ========== MỞ ĐẦU ========== -->
+<h1>Mở đầu</h1>
+
+<h2>1. Tính cấp thiết của đề tài</h2>
+<p>Thương mại điện tử ngành thiết bị di động và phụ kiện phát triển mạnh; người dùng cần cổng mua sắm trực tuyến minh bạch giá, khuyến mãi theo thời gian thực và trải nghiệm tư vấn nhanh. Xây dựng website <strong>Candy Digital</strong> (full-stack) giúp cửa hàng số hóa quy trình: trưng bày sản phẩm đa biến thể (màu, dung lượng), giỏ hàng, đặt hàng, quản trị đơn và chiến dịch giảm giá — đáp ứng nhu cầu thực tiễn và mục tiêu đào tạo kỹ năng phát triển Web hiện đại.</p>
+
+<h2>2. Mục tiêu nghiên cứu / thực hiện</h2>
+<ul>
+  <li>Xây dựng ứng dụng web hai vai trò: <strong>khách hàng</strong> (cổng mua sắm) và <strong>quản trị viên</strong> (back-office).</li>
+  <li>Triển khai backend REST API trên Node.js + Express, cơ sở dữ liệu MySQL, xác thực JWT.</li>
+  <li>Triển khai frontend Next.js (App Router), tách môi trường khách/admin bằng biến <code>NEXT_PUBLIC_APP_MODE</code>.</li>
+  <li>Tích hợp chat hỗ trợ bằng Google Gemini (API) theo phiên làm việc.</li>
+  <li>Quản lý khuyến mãi theo chiến dịch (phạm vi toàn shop / danh mục / sản phẩm) và cấu hình kênh thanh toán.</li>
+</ul>
+
+<h2>3. Đối tượng và phạm vi nghiên cứu</h2>
+<ul>
+  <li><strong>Đối tượng:</strong> Quy trình nghiệp vụ e-commerce bán lẻ thiết bị công nghệ; hệ thống Candy Digital trong mã nguồn hiện có.</li>
+  <li><strong>Phạm vi:</strong> Chức năng đã mã hóa trong repository (không mở rộng sang ứng dụng di động native hay cổng thanh toán trung gian thực tế nếu chưa cấu hình giao dịch live).</li>
+</ul>
+
+<h2>4. Phương pháp nghiên cứu</h2>
+<ul>
+  <li>Khảo sát tài liệu: hướng dẫn cài đặt (<code>README.md</code>), schema SQL và cập nhật schema động trong backend.</li>
+  <li>Phân tích mã nguồn: routes Express, controllers, middleware; cấu trúc thư mục <code>frontend/src/app</code>.</li>
+  <li>Thử nghiệm chức năng theo hướng dẫn chạy local (backend cổng 5000, frontend 3000/3001).</li>
+</ul>
+
+<div style="page-break-after: always;"></div>
+
+<!-- ========== CHƯƠNG I ========== -->
+<h1>Chương I. Tổng quan ngôn ngữ lập trình JavaScript</h1>
+
+<h2>1.1. Giới thiệu và mục đích sử dụng</h2>
+<p><strong>JavaScript</strong> là ngôn ngữ lõi của lớp ứng dụng đề tài: phía máy chủ (Node.js — Express), phía trình duyệt (React trong Next.js). Ưu điểm là một ngôn ngữ xuyên suốt full-stack, hệ sinh thái npm phong phú, bất đồng bộ phù hợp gọi API và I/O.</p>
+
+<h2>1.2. Cấu trúc điều khiển trong JavaScript (ứng dụng trong dự án)</h2>
+<p>Các cấu trúc điều khiển cơ bản được dùng xuyên suốt mã nguồn:</p>
+<ul>
+  <li><strong>if / else:</strong> phân nhánh xử lý lỗi API, kiểm tra quyền <code>admin</code>, trạng thái đơn hàng, điều kiện áp dụng khuyến mãi.</li>
+  <li><strong>for / for…of:</strong> duyệt danh sách sản phẩm, mục giỏ hàng, map dữ liệu hiển thị.</li>
+  <li><strong>while / vòng lặp logic:</strong> dùng trong các flow bất đồng bộ (Promise, async/await) thay cho blocking loop — ví dụ middleware xử lý chuỗi request.</li>
+</ul>
+<p>Dự án còn sử dụng mở rộng ES6+ (arrow function, destructuring, module <code>import/export</code> ở frontend TypeScript).</p>
+
+<div style="page-break-after: always;"></div>
+
+<!-- ========== CHƯƠNG II ========== -->
+<h1>Chương II. Trí tuệ nhân tạo, chatbot và đặc tả sản phẩm đề tài</h1>
+
+<h2>2.1. Tổng quan về trí tuệ nhân tạo (AI)</h2>
+<p>AI hỗ trợ tự động hóa tư vấn, giảm tải cho nhân viên trong giờ cao điểm. Trong hệ thống Candy Digital, tính năng chat sử dụng <strong>mô hình ngôn ngữ lớn</strong> qua Google AI Studio (biến môi trường <code>GEMINI_API_KEY</code>, <code>GEMINI_MODEL</code> như tài liệu dự án).</p>
+
+<h3>2.1.1. Vai trò của JavaScript và Node.js trong tích hợp AI</h3>
+<p>Backend Node.js nhận tin nhắn người dùng, gọi API Gemini, lưu lịch sử hội thoại trong MySQL (<code>chat_sessions</code>, <code>chat_messages</code>). Frontend gửi kèm header phiên (<code>x-session-token</code>) qua axios interceptor (<code>src/lib/api.ts</code>).</p>
+
+<h3>2.1.2 — 2.1.3. Phát triển AI và phân loại (tóm tắt lý thuyết)</h3>
+<p>AI tạo sinh (generative AI) phù hợp bối cảnh tư vấn sản phẩm; hệ thống tận dụng lớp “trợ lý ảo” thay vì thay thế hoàn toàn nhân sự bán hàng.</p>
+
+<h2>2.2. Giới thiệu chatbot trong đề tài</h2>
+<p>Luồng API: <code>GET /api/chat/session</code> (khởi tạo/lấy phiên), <code>POST /api/chat/message</code> (gửi tin). Dữ liệu phiên và nội dung được ghi DB để đối soát và tiếp tục hội thoại.</p>
+
+<h2>2.3. Giới thiệu sản phẩm phần mềm « Candy Digital »</h2>
+<p><strong>Candy Digital</strong> là nền tảng thương mại điện tử tập trung mặt hàng điện thoại, phụ kiện và thiết bị liên quan. Điểm khác biệt kỹ thuật so với demo đơn giản:</p>
+<ul>
+  <li>Hai ứng dụng Next.js cùng codebase: khách <code>http://localhost:3000</code>, admin <code>http://localhost:3001/admin</code> — cookie/localStorage tách biệt theo origin.</li>
+  <li>Giá bán hiển thị có tính khuyến mãi chiến dịch; giỏ hàng khóa <code>unit_price</code> tại thời điểm thêm để tránh sai lệch khi chiến dịch kết thúc.</li>
+  <li>Trang chi tiết sản phẩm hỗ trợ thông tin phong phú (mô tả ngắn, thông số JSON, biến thể màu/dung lượng theo schema mở rộng).</li>
+</ul>
+
+<div style="page-break-after: always;"></div>
+
+<!-- ========== CHƯƠNG III ========== -->
+<h1>Chương III. Khảo sát và phân tích hệ thống</h1>
+
+<h2>3.1. Khảo sát và xác định yêu cầu bài toán</h2>
+
+<h3>3.1.1. Mô tả bài toán</h3>
+<p>Cần hệ thống cho phép người dùng đăng ký/đăng nhập, duyệt danh mục &amp; sản phẩm, thêm giỏ, thanh toán (COD, chuyển khoản, ví điện tử theo cấu hình), theo dõi đơn. Quản trị viên quản lý sản phẩm (kèm ảnh, biến thể), danh mục, đơn hàng và trạng thái, người dùng, cấu hình thanh toán hiển thị cho khách, và <strong>chiến dịch khuyến mãi</strong> có lịch và phạm vi áp dụng.</p>
+
+<h3>3.1.2. Hiện trạng triển khai</h3>
+<p>Đã có backend <code>server.js</code> gắn các nhánh: <code>/api/auth</code>, <code>/api/products</code>, <code>/api/categories</code>, <code>/api/cart</code>, <code>/api/orders</code>, <code>/api/users</code>, <code>/api/chat</code>, <code>/api/payment-settings</code>, <code>/api/promotions</code>; kiểm tra sức khỏe <code>GET /api/health</code>. Frontend có đầy đủ trang khách: trang chủ, sản phẩm, chi tiết theo slug, giỏ, thanh toán, đơn hàng, khuyến mãi, giới thiệu, hồ sơ; trang auth; khối admin: dashboard, sản phẩm, danh mục, khuyến mãi, đơn, người dùng, thanh toán, tài khoản.</p>
+
+<h2>3.2. Phân tích hệ thống</h2>
+
+<h3>3.2.1. Các tác nhân</h3>
+<table>
+  <tr><th>Tác nhân</th><th>Mô tả vai trò trong mã nguồn</th></tr>
+  <tr><td>Khách (chưa đăng nhập)</td><td>Xem sản phẩm, khuyến mãi; chat qua session token.</td></tr>
+  <tr><td>Người dùng</td><td>JWT trong localStorage; giỏ hàng gắn <code>user_id</code>; đặt hàng.</td></tr>
+  <tr><td>Quản trị viên</td><td><code>role === 'admin'</code>; truy cập route <code>/admin/*</code> và API admin.</td></tr>
+  <tr><td>Hệ thống thanh toán / vận hành</td><td>Cấu hình trong <code>payment_settings</code>; phương thức đơn: <code>cod</code>, <code>bank_transfer</code>, <code>momo</code>, <code>zalopay</code>.</td></tr>
+</table>
+
+<h3>3.2.2. Thiết kế chức năng (đã hiện thực)</h3>
+<table>
+  <tr><th>Nhóm</th><th>Chức năng chính</th></tr>
+  <tr><td>Người dùng</td><td>Đăng ký, đăng nhập, xem/sửa hồ sơ, đổi mật khẩu (API <code>/api/auth/...</code>).</td></tr>
+  <tr><td>Sản phẩm</td><td>Danh sách/lọc, chi tiết <code>/api/products/:slug</code>, biến thể &amp; màu (bảng variants/colors + migration).</td></tr>
+  <tr><td>Giỏ &amp; đơn</td><td>CRUD giỏ; tạo đơn, lịch sử đơn, hủy đơn (theo quy định API).</td></tr>
+  <tr><td>Khuyến mãi</td><td>Chiến dịch có <code>discount_percent</code>, cửa sổ thời gian, <code>scope</code>, bảng <code>promotion_campaign_targets</code>.</td></tr>
+  <tr><td>Chat AI</td><td>Phiên và tin nhắn lưu DB; tích hợp Gemini phía server.</td></tr>
+  <tr><td>Quản trị</td><td>Giao diện Next.js tại <code>/admin/...</code>; middleware chặn chéo mode giữa app khách và app admin.</td></tr>
+</table>
+
+<div style="page-break-after: always;"></div>
+
+<!-- ========== CHƯƠNG IV ========== -->
+<h1>Chương IV. Thiết kế và xây dựng hệ thống</h1>
+
+<h2>4.1. Thiết kế cơ sở dữ liệu</h2>
+<p>Cơ sở dữ liệu <strong>MySQL</strong> tên <code>candy_digital</code> (UTF-8). Khởi tạo từ <code>database/schema.sql</code>, bổ sung tự động khi chạy server qua <code>config/schema-updater.js</code> (tạo bảng cột mở rộng nếu thiếu). Các thực thể cốt lõi gồm:</p>
+<ul>
+  <li><code>users</code> — người dùng, phân quyền <code>user</code> | <code>admin</code>.</li>
+  <li><code>categories</code>, <code>products</code>, <code>product_images</code>.</li>
+  <li><code>product_variants</code> — cấu hình giá/tồn theo tùy chọn dung lượng (và liên kết màu trong luồng hiện tại).</li>
+  <li><code>product_colors</code> — tùy chọn màu tách bạch (ảnh/hex).</li>
+  <li><code>carts</code> — gồm <code>variant_id</code>, <code>color_name</code>, <code>storage_label</code>, <code>unit_price</code> khóa giá khuyến mãi.</li>
+  <li><code>orders</code>, <code>order_items</code> — kèm thông tin thanh toán người chuyển (cột mở rộng) và snapshot sản phẩm khi đặt.</li>
+  <li><code>chat_sessions</code>, <code>chat_messages</code>.</li>
+  <li><code>payment_settings</code> — bật/tắt kênh, QR, nội dung hướng dẫn.</li>
+  <li><code>promotion_campaigns</code>, <code>promotion_campaign_targets</code>.</li>
+</ul>
+
+<h2>4.2. Các chức năng của hệ thống (mapping API–giao diện)</h2>
+<p>Backend chạy mặc định cổng <strong>5000</strong>, CORS cho phép origin cấu hình và localhost động cổng. Frontend lấy <code>NEXT_PUBLIC_API_URL</code> trỏ tới <code>http://localhost:5000/api</code>. Các nhóm endpoint tiêu biểu đã có trong tài liệu dự án: xác thực; CRUD sản phẩm phía admin; giỏ; đơn (user + admin); khuyến mãi; chat.</p>
+
+<h2>4.3. Thiết kế giao diện</h2>
+<ul>
+  <li><strong>Kỹ thuật:</strong> Next.js App Router, component tái sử dụng, Tailwind CSS, toast thông báo (<code>react-hot-toast</code>), cửa hàng trạng thái <code>zustand</code> (auth, cart).</li>
+  <li><strong>Trải nghiệm khách:</strong> thanh điều hướng, tìm kiếm sản phẩm, badge giỏ, trang chi tiết đa phương tiện.</li>
+  <li><strong>Admin:</strong> sidebar điều hướng, bảng dữ liệu, form CRUD; liên kết “Xem trang khách hàng” theo biến môi trường.</li>
+  <li><strong>Đồ họa thương hiệu:</strong> logo <code>/logo-candy-digital.png</code> trên navbar và trang đăng nhập.</li>
+  <li><strong>Cấu hình dev:</strong> hai mode tách thư mục build (<code>.next-customer</code>, <code>.next-admin</code> trong <code>next.config.js</code>) để tránh xung đột khi chạy song song hai <code>next dev</code>.</li>
+</ul>
+
+<div style="page-break-after: always;"></div>
+
+<!-- ========== CHƯƠNG V ========== -->
+<h1>Chương V. Cài đặt, kiểm thử và đánh giá</h1>
+
+<h2>5.1. Công cụ sử dụng</h2>
+<table>
+  <tr><th>Thành phần</th><th>Công nghệ / phiên bản (theo dự án)</th></tr>
+  <tr><td>Runtime &amp; server</td><td>Node.js, Express</td></tr>
+  <tr><td>Client</td><td>Next.js 14, React 18, TypeScript, Tailwind CSS</td></tr>
+  <tr><td>Cơ sở dữ liệu</td><td>MySQL 8</td></tr>
+  <tr><td>Gọi HTTP</td><td>Axios + interceptors</td></tr>
+  <tr><td>AI</td><td>Google Gemini API (cấu hình trong <code>.env</code> backend)</td></tr>
+  <tr><td>Công cụ phát triển</td><td>npm, <code>cross-env</code>, <code>npm-run-all</code> (script <code>run-p</code> chạy song song hai frontend)</td></tr>
+</table>
+
+<h2>5.2. Kiểm thử chương trình</h2>
+<p>Đã thực hiện kiểm thử chức năng thủ công (exploratory) theo luồng: khởi động MySQL → backend → frontend; đăng ký/đăng nhập khách; duyệt sản phẩm; thêm giỏ; đặt hàng; kiểm tra admin cập nhật trạng thái; tạo/sửa chiến dịch khuyến mãi; gửi tin nhắn chat khi đã cấp hợp lệ API key. Endpoint <code>/api/health</code> dùng kiểm tra nhanh backend.</p>
+
+<h2>5.3. Đánh giá kết quả thực nghiệm</h2>
+<h3>5.3.1. Phân tích đáp ứng yêu cầu</h3>
+<p>Hệ thống bao phủ đầy đủ luồng nghiệp vụ cốt lõi của đề tài thương mại điện tử có quản trị và khuyến mãi linh hoạt; tích hợp AI phục vụ tương tác. Kiến trúc tách frontend hai cổng phục vụ rõ vai trò người dùng — phù hợp định hướng môn học và doanh nghiệp nhỏ.</p>
+<h3>5.3.2. Đánh giá chung</h3>
+<ul>
+  <li><strong>Ưu điểm:</strong> Mã nguồn có cấu trúc; API và migration có thể mở rộng; giao diện hiện đại.</li>
+  <li><strong>Hạn chế / rủi ro:</strong> Cần bảo vệ production (HTTPS, rotate JWT secret, validate input nghiêm ngặt); tích hợp thanh toán ví/QR thực tế phụ thuộc đối tác; chat AI phụ thuộc quota và chất lượng mô hình chọn.</li>
+</ul>
+
+<div style="page-break-after: always;"></div>
+
+<h1>Kết luận và hướng phát triển</h1>
+<p>Đề tài « Candy Digital » đã được triển khai thành hệ thống full-stack với đầy đủ các module chính mô tả trong mã nguồn hiện tại: người dùng, sản phẩm đa biến thể, giỏ hàng có khóa giá khuyến mãi, đơn hàng, quản trị, chiến dịch giảm giá, cấu hình thanh toán và chat AI.</p>
+<p><strong>Hướng phát triển tiếp theo:</strong> (1) Bổ sung kiểm thử tự động (unit/integration); (2) Triển khai lên môi trường cloud, tên miền, chứng chỉ TLS; (3) Tối ưu SEO và hiệu năng ảnh (Next/Image); (4) Hoàn thiện pipeline thanh toán trực tuyến nếu có nghiệp vụ thực tế; (5) Ghi log audit cho thao tác admin.</p>
+
+<div class="sig-block no-break">
+  <div class="sig-col">
+    <p><strong>Giảng viên hướng dẫn</strong><br /><em>(ký và ghi rõ họ tên)</em></p>
+    <p style="margin-top:22mm;">ThS. Nguyễn Thùy Chinh</p>
+  </div>
+  <div class="sig-col">
+    <p><strong>Sinh viên thực hiện</strong><br /><em>(ký và ghi rõ họ tên)</em></p>
+    <p style="margin-top:22mm;"><strong>Keo Thoumvilay</strong></p>
+  </div>
+</div>
+
+<div style="page-break-after: always;"></div>
+
+<h1>Danh mục tài liệu tham khảo</h1>
+<ol>
+  <li>Tài liệu hướng dẫn cài đặt dự án <em>Candy Digital</em> — file <code>README.md</code> trong repository.</li>
+  <li>Next.js Documentation — https://nextjs.org/docs</li>
+  <li>Express.js Guide — https://expressjs.com/</li>
+  <li>MySQL 8.0 Reference Manual — https://dev.mysql.com/doc/</li>
+  <li>Google AI (Gemini) — tài liệu kỹ thuật Google AI Studio / API.</li>
+  <li>Giáo trình và bài giảng môn Lập trình Web / Hệ quản trị CSDL — Khoa Công nghệ Thông tin, Đại học Công nghiệp Quảng Ninh.</li>
+</ol>
+
+<p class="small center" style="margin-top:14mm;">— Hết báo cáo —</p>
+
+</body>
+</html>
