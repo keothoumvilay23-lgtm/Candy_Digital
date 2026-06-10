@@ -15,8 +15,9 @@ node_modules/
 .next-customer/
 next-env.d.ts
 *.tsbuildinfo
-# ===== Uploads (file người dùng tải lên, không nên commit) =====
-candy-digital/backend/uploads/
+# ===== Uploads =====
+# Giữ lại ảnh mẫu (seed) để deploy có ảnh; chỉ bỏ qua file tạm nếu có.
+
 # ===== Python =====
 __pycache__/
 *.py[cod]
