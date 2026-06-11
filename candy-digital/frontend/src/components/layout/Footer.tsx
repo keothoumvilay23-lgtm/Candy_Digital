@@ -38,7 +38,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t border-gray-800 py-4 text-center text-xs text-gray-500">
-        © 2024 Candy Digital. All rights reserved.
+        © 2026 Candy Digital. All rights reserved.
       </div>
     </footer>
   );
