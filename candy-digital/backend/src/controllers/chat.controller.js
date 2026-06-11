@@ -82,28 +82,92 @@ const sendMessage = async (req, res) => {
       [sessionId]
     );
 
-    // Get product context
+    // Get product context (kèm mô tả ngắn để AI tư vấn đúng tính năng)
     const [products] = await db.query(
-      `SELECT p.name, p.price, p.brand, p.stock, c.name AS category
+      `SELECT p.id, p.name, p.price, p.brand, p.stock, p.description, c.name AS category
        FROM products p LEFT JOIN categories c ON p.category_id = c.id
        WHERE p.is_active = 1 ORDER BY p.created_at DESC LIMIT 30`
     );
 
-    const productList = products.map((p) =>
-      `- ${p.name} (${p.brand}) - Danh mục: ${p.category} - Giá: ${Number(p.price).toLocaleString('vi-VN')}đ - Tồn kho: ${p.stock}`
-    ).join('\n');
+    // Màu sắc nằm ở bảng product_colors; dung lượng + giá theo phiên bản ở product_variants.
+    let colorsByProduct = {};
+    let storagesByProduct = {};
+    if (products.length) {
+      const productIds = products.map((p) => p.id);
+      const placeholders = productIds.map(() => '?').join(',');
+
+      const [colorRows] = await db.query(
+        `SELECT product_id, name
+         FROM product_colors
+         WHERE is_active = 1 AND product_id IN (${placeholders})
+         ORDER BY sort_order ASC, id ASC`,
+        productIds
+      );
+      colorsByProduct = colorRows.reduce((acc, c) => {
+        (acc[c.product_id] = acc[c.product_id] || []).push(c.name);
+        return acc;
+      }, {});
+
+      const [storageRows] = await db.query(
+        `SELECT product_id, storage_label, price, stock
+         FROM product_variants
+         WHERE is_active = 1 AND product_id IN (${placeholders})
+         ORDER BY sort_order ASC, id ASC`,
+        productIds
+      );
+      storagesByProduct = storageRows.reduce((acc, v) => {
+        (acc[v.product_id] = acc[v.product_id] || []).push(v);
+        return acc;
+      }, {});
+    }
+
+    const formatVnd = (n) => `${Number(n).toLocaleString('vi-VN')}đ`;
+    const uniq = (arr) => [...new Set(arr.filter(Boolean))];
+
+    const productList = products.map((p) => {
+      const colors = uniq(colorsByProduct[p.id] || []);
+      const storageVariants = storagesByProduct[p.id] || [];
+      const storages = uniq(storageVariants.map((v) => v.storage_label));
+
+      // Giá: nếu có biến thể dung lượng thì hiển thị khoảng giá thực tế của các biến thể còn hàng
+      const variantPrices = storageVariants
+        .filter((v) => Number(v.stock) > 0)
+        .map((v) => Number(v.price))
+        .filter((n) => Number.isFinite(n) && n > 0);
+      let priceText = formatVnd(p.price);
+      if (variantPrices.length) {
+        const min = Math.min(...variantPrices);
+        const max = Math.max(...variantPrices);
+        priceText = min === max ? formatVnd(min) : `${formatVnd(min)} - ${formatVnd(max)}`;
+      }
+
+      const lines = [
+        `- ${p.name} (${p.brand}) — Danh mục: ${p.category}`,
+        `  Giá: ${priceText} | Tồn kho: ${p.stock}`,
+      ];
+      if (colors.length) lines.push(`  Màu sắc: ${colors.join(', ')}`);
+      if (storages.length) lines.push(`  Dung lượng: ${storages.join(', ')}`);
+      if (p.description) {
+        const desc = String(p.description).replace(/\s+/g, ' ').trim().slice(0, 180);
+        lines.push(`  Mô tả: ${desc}`);
+      }
+      return lines.join('\n');
+    }).join('\n\n');
 
     const systemPrompt = `Bạn là Candy AI, trợ lý tư vấn sản phẩm của cửa hàng Candy Digital - chuyên bán điện thoại và phụ kiện chính hãng.
 
-Danh sách sản phẩm hiện có tại cửa hàng:
+Danh sách sản phẩm hiện có tại cửa hàng (mỗi sản phẩm kèm Màu sắc và Dung lượng nếu có):
 ${productList}
 
 Hướng dẫn:
 - Tư vấn sản phẩm phù hợp với nhu cầu và ngân sách của khách
 - Luôn đề xuất sản phẩm từ danh sách trên khi phù hợp
+- Khi khách hỏi về MÀU SẮC hoặc DUNG LƯỢNG, hãy dựa vào dòng "Màu sắc" và "Dung lượng" của sản phẩm trong danh sách để trả lời chính xác. Liệt kê đầy đủ các màu/dung lượng đang có.
+- Nếu một sản phẩm có ghi màu sắc trong danh sách thì TUYỆT ĐỐI không nói "không có thông tin về màu sắc".
+- Khi giá hiển thị dạng khoảng (vd "22.000.000đ - 33.000.000đ") nghĩa là giá thay đổi theo dung lượng/biến thể; hãy giải thích cho khách rõ.
 - Trả lời ngắn gọn, thân thiện, chuyên nghiệp bằng tiếng Việt
 - Nếu khách hỏi ngoài phạm vi sản phẩm, hãy lịch sự chuyển hướng về tư vấn sản phẩm
-- Không bịa thông tin sản phẩm không có trong danh sách`;
+- Không bịa thông tin sản phẩm không có trong danh sách. Nếu một sản phẩm KHÔNG có dòng Màu sắc/Dung lượng thì nói rằng hiện chưa có thông tin biến thể cho sản phẩm đó và mời khách xem trang chi tiết.`;
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
