@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const { ensureSchema } = require('./config/schema-updater');
+const { ensureVariantSeed } = require('./config/seed-variants');
+const db = require('./config/db');
 
 const app = express();
 
@@ -64,8 +66,15 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 ensureSchema()
-  .then(() => {
+  .then(async () => {
     console.log('✅ Database schema is up to date');
+    // Tự seed màu/dung lượng khi DB còn trống (giúp bản online có dữ liệu màu mà không cần thao tác tay).
+    // Bọc try/catch để lỗi seed KHÔNG chặn server khởi động.
+    try {
+      await ensureVariantSeed(db);
+    } catch (e) {
+      console.warn('⚠️  Bỏ qua auto-seed màu/dung lượng:', e.message);
+    }
     app.listen(PORT, () => {
       console.log(`🚀 Server running on http://localhost:${PORT}`);
     });

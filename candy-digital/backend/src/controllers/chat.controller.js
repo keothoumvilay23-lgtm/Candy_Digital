@@ -2,7 +2,38 @@ const db = require('../config/db');
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+// Model chính (có thể đặt qua GEMINI_MODEL). Nếu model chính hết quota (lỗi 429),
+// tự thử lần lượt các model phụ — quota miễn phí tính RIÊNG theo từng model nên
+// đây là cách tăng số lượt trả lời mà không tốn phí.
+const PRIMARY_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+const FALLBACK_MODELS = ['gemini-2.5-flash-lite', 'gemini-2.0-flash', 'gemini-2.0-flash-lite'];
+const MODEL_CHAIN = [...new Set([PRIMARY_MODEL, ...FALLBACK_MODELS])];
+
+// Gọi 1 model Gemini, có timeout 30s để tránh treo request.
+const callGeminiModel = async (model, apiKey, payload) => {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 30000);
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      }
+    );
+    if (!res.ok) {
+      const errorText = await res.text();
+      return { ok: false, status: res.status, errorText };
+    }
+    return { ok: true, data: await res.json() };
+  } catch (e) {
+    return { ok: false, status: 0, errorText: e.name === 'AbortError' ? 'timeout' : e.message };
+  } finally {
+    clearTimeout(timer);
+  }
+};
 
 const toGeminiContents = (history) =>
   history.map((item) => ({
@@ -196,36 +227,45 @@ Hướng dẫn:
     }
 
     const contents = toGeminiContents(history);
+    const payload = {
+      system_instruction: { parts: [{ text: systemPrompt }] },
+      contents,
+      generationConfig: { maxOutputTokens: 1000, temperature: 0.7 },
+    };
 
-    // Call Gemini API
-    const geminiRes = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': apiKey,
-        },
-        body: JSON.stringify({
-          system_instruction: {
-            parts: [{ text: systemPrompt }],
-          },
-          contents,
-          generationConfig: {
-            maxOutputTokens: 1000,
-            temperature: 0.7,
-          },
-        }),
+    // Lần lượt thử từng model: thành công thì dừng; gặp 429 (hết quota) thì sang model kế tiếp.
+    let aiReply = null;
+    let quotaExceeded = false;
+    let lastError = '';
+    for (const model of MODEL_CHAIN) {
+      const result = await callGeminiModel(model, apiKey, payload);
+      if (result.ok) {
+        aiReply = extractGeminiReply(result.data);
+        break;
       }
-    );
-
-    if (!geminiRes.ok) {
-      const errorText = await geminiRes.text();
-      throw new Error(`Gemini API error: ${geminiRes.status} ${errorText}`);
+      if (result.status === 429) {
+        quotaExceeded = true;
+        console.warn(`Gemini ${model} hết quota (429), thử model kế tiếp...`);
+        continue;
+      }
+      lastError = `Gemini ${model} lỗi ${result.status}: ${result.errorText}`;
+      console.error(lastError);
     }
 
-    const geminiData = await geminiRes.json();
-    const aiReply = extractGeminiReply(geminiData);
+    // Hết quota toàn bộ model → trả thông báo thân thiện (KHÔNG lưu vào lịch sử để khách hỏi lại được).
+    if (!aiReply) {
+      if (quotaExceeded) {
+        return res.json({
+          success: true,
+          data: {
+            reply:
+              'Xin lỗi, trợ lý AI đang quá tải do vượt giới hạn lượt hỏi miễn phí trong hôm nay. ' +
+              'Bạn vui lòng thử lại sau ít phút, hoặc xem trực tiếp thông tin (màu sắc, dung lượng, giá) ở trang chi tiết sản phẩm nhé!',
+          },
+        });
+      }
+      throw new Error(lastError || 'Gemini API did not return a text response');
+    }
 
     // Save assistant message
     await db.query('INSERT INTO chat_messages (session_id, role, content) VALUES (?, ?, ?)', [sessionId, 'assistant', aiReply]);
