@@ -14,6 +14,17 @@ services:
         value: 7d
       - key: GEMINI_MODEL
         value: gemini-2.5-flash
+      # ===== VNPay (demo/đồ án) =====
+      # VNP_MOCK=1 → dùng cổng thanh toán GIẢ LẬP ngay trên backend (không cần tài khoản VNPay thật).
+      # payUrl/returnUrl tự suy ra từ RENDER_EXTERNAL_URL nên không cần khai báo host.
+      # Khi có tài khoản sandbox thật: đặt VNP_MOCK=0 và điền VNP_TMN_CODE/VNP_HASH_SECRET thật,
+      # đồng thời set VNP_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html trên dashboard.
+      - key: VNP_MOCK
+        value: "1"
+      - key: VNP_TMN_CODE
+        value: CANDYDEMO
+      - key: VNP_HASH_SECRET
+        value: candy_digital_vnpay_demo_secret_2024
       # DB cloud (Aiven/PlanetScale) bắt buộc SSL thì đổi thành "true"
       - key: DB_SSL
         value: "false"

@@ -8,12 +8,32 @@ const crypto = require('crypto');
 
 const VNP_VERSION = '2.1.0';
 
+// URL public của chính backend. Trên Render biến RENDER_EXTERNAL_URL được inject sẵn
+// (vd: https://candy-digital-api.onrender.com) nên không cần hard-code host khi deploy.
+function getPublicBaseUrl() {
+  const base =
+    process.env.PUBLIC_API_URL ||
+    process.env.RENDER_EXTERNAL_URL ||
+    `http://localhost:${process.env.PORT || 5000}`;
+  return base.replace(/\/+$/, '');
+}
+
+// Bật cổng giả lập (demo/đồ án — không cần tài khoản VNPay thật): đặt VNP_MOCK=1.
+function mockEnabled() {
+  return /^(1|true)$/i.test(process.env.VNP_MOCK || '');
+}
+
 function getConfig() {
+  const base = getPublicBaseUrl();
   return {
     tmnCode: process.env.VNP_TMN_CODE || '',
     hashSecret: process.env.VNP_HASH_SECRET || '',
-    payUrl: process.env.VNP_URL || 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
-    returnUrl: process.env.VNP_RETURN_URL || 'http://localhost:5000/api/orders/vnpay/return',
+    payUrl:
+      process.env.VNP_URL ||
+      (mockEnabled()
+        ? `${base}/api/orders/vnpay/mock-gateway`
+        : 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html'),
+    returnUrl: process.env.VNP_RETURN_URL || `${base}/api/orders/vnpay/return`,
   };
 }
 
