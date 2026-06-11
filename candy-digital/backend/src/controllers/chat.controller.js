@@ -89,36 +89,57 @@ const sendMessage = async (req, res) => {
        WHERE p.is_active = 1 ORDER BY p.created_at DESC LIMIT 30`
     );
 
-    // Màu sắc nằm ở bảng product_colors; dung lượng + giá theo phiên bản ở product_variants.
+    // Màu sắc + dung lượng để AI tư vấn. Schema có thể khác nhau giữa các môi trường:
+    //  - Kiểu A: màu ở bảng riêng product_colors(name); dung lượng ở product_variants(storage_label)
+    //  - Kiểu B: cả màu lẫn dung lượng ở product_variants(color, storage_label)
+    // Mỗi query bọc try/catch riêng để bảng/cột thiếu KHÔNG làm hỏng cả chatbot.
     let colorsByProduct = {};
     let storagesByProduct = {};
     if (products.length) {
       const productIds = products.map((p) => p.id);
       const placeholders = productIds.map(() => '?').join(',');
 
-      const [colorRows] = await db.query(
-        `SELECT product_id, name
-         FROM product_colors
-         WHERE is_active = 1 AND product_id IN (${placeholders})
-         ORDER BY sort_order ASC, id ASC`,
-        productIds
-      );
-      colorsByProduct = colorRows.reduce((acc, c) => {
-        (acc[c.product_id] = acc[c.product_id] || []).push(c.name);
-        return acc;
-      }, {});
+      const pushTo = (map, key, val) => {
+        if (val === undefined || val === null || val === '') return;
+        (map[key] = map[key] || []).push(val);
+      };
 
-      const [storageRows] = await db.query(
-        `SELECT product_id, storage_label, price, stock
-         FROM product_variants
-         WHERE is_active = 1 AND product_id IN (${placeholders})
-         ORDER BY sort_order ASC, id ASC`,
-        productIds
-      );
-      storagesByProduct = storageRows.reduce((acc, v) => {
-        (acc[v.product_id] = acc[v.product_id] || []).push(v);
-        return acc;
-      }, {});
+      // 1) Màu sắc từ bảng product_colors (nếu có)
+      try {
+        const [colorRows] = await db.query(
+          `SELECT product_id, name
+           FROM product_colors
+           WHERE is_active = 1 AND product_id IN (${placeholders})
+           ORDER BY sort_order ASC, id ASC`,
+          productIds
+        );
+        colorRows.forEach((c) => pushTo(colorsByProduct, c.product_id, c.name));
+      } catch (e) {
+        console.warn('Chat context: bỏ qua product_colors —', e.code || e.message);
+      }
+
+      // 2) Dung lượng (+ giá) và màu dự phòng từ product_variants
+      const variantColorsByProduct = {};
+      try {
+        const [variantRows] = await db.query(
+          `SELECT product_id, color, storage_label, price, stock
+           FROM product_variants
+           WHERE is_active = 1 AND product_id IN (${placeholders})
+           ORDER BY sort_order ASC, id ASC`,
+          productIds
+        );
+        variantRows.forEach((v) => {
+          pushTo(storagesByProduct, v.product_id, v);
+          pushTo(variantColorsByProduct, v.product_id, v.color);
+        });
+      } catch (e) {
+        console.warn('Chat context: bỏ qua product_variants —', e.code || e.message);
+      }
+
+      // Dùng màu từ product_variants làm dự phòng cho sản phẩm chưa có màu ở product_colors
+      for (const pid of Object.keys(variantColorsByProduct)) {
+        if (!colorsByProduct[pid]?.length) colorsByProduct[pid] = variantColorsByProduct[pid];
+      }
     }
 
     const formatVnd = (n) => `${Number(n).toLocaleString('vi-VN')}đ`;
