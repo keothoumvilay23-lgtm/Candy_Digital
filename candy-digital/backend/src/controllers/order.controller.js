@@ -1,5 +1,6 @@
 const db = require('../config/db');
 const ExcelJS = require('exceljs');
+const { sendOrderConfirmationEmail } = require('../services/email.service');
 
 // POST /api/orders
 const createOrder = async (req, res) => {
@@ -109,6 +110,30 @@ const createOrder = async (req, res) => {
     await conn.commit();
 
     const orderCode = `DH${String(orderId).padStart(6, '0')}`;
+
+    // Gửi email xác nhận cho khách — chạy nền (không await), email lỗi không ảnh hưởng đơn.
+    const customerUrl = (process.env.CLIENT_URL || '').split(',')[0].trim() || undefined;
+    sendOrderConfirmationEmail({
+      to: req.user.email,
+      customerName: req.user.name,
+      orderCode,
+      items: cartItems.map((i) => ({
+        name: i.name,
+        color_name: i.color_name,
+        storage_label: i.storage_label,
+        quantity: i.quantity,
+        price: i.price,
+      })),
+      totalPrice,
+      shippingName: shipping_name,
+      shippingPhone: shipping_phone,
+      shippingAddress: shipping_address,
+      paymentMethod: pm,
+      paymentStatus,
+      note,
+      customerUrl: customerUrl ? `${customerUrl}/orders` : undefined,
+    }).catch(() => {});
+
     res.status(201).json({
       success: true,
       message: isPrepaid

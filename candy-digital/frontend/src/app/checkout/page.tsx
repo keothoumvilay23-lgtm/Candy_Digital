@@ -18,11 +18,31 @@ import {
   type PaymentSetting,
 } from '@/lib/payment';
 
-const VIETNAM_BANKS = [
-  'Vietcombank', 'Techcombank', 'MB Bank', 'BIDV', 'Vietinbank', 'Agribank',
-  'ACB', 'VPBank', 'Sacombank', 'TPBank', 'HDBank', 'OCB', 'MSB', 'SHB',
-  'Eximbank', 'VIB', 'SCB', 'Nam A Bank', 'Bac A Bank', 'PVcomBank',
+// code = mã ngân hàng theo VietQR để lấy logo thật từ CDN cdn.vietqr.io
+const VIETNAM_BANKS: { name: string; code: string }[] = [
+  { name: 'Vietcombank', code: 'VCB' },
+  { name: 'Techcombank', code: 'TCB' },
+  { name: 'MB Bank', code: 'MB' },
+  { name: 'BIDV', code: 'BIDV' },
+  { name: 'Vietinbank', code: 'ICB' },
+  { name: 'Agribank', code: 'VBA' },
+  { name: 'ACB', code: 'ACB' },
+  { name: 'VPBank', code: 'VPB' },
+  { name: 'Sacombank', code: 'STB' },
+  { name: 'TPBank', code: 'TPB' },
+  { name: 'HDBank', code: 'HDB' },
+  { name: 'OCB', code: 'OCB' },
+  { name: 'MSB', code: 'MSB' },
+  { name: 'SHB', code: 'SHB' },
+  { name: 'Eximbank', code: 'EIB' },
+  { name: 'VIB', code: 'VIB' },
+  { name: 'SCB', code: 'SCB' },
+  { name: 'Nam A Bank', code: 'NAB' },
+  { name: 'Bac A Bank', code: 'BAB' },
+  { name: 'PVcomBank', code: 'PVCB' },
 ];
+
+const bankLogoUrl = (code: string) => `https://cdn.vietqr.io/img/${code}.png`;
 
 const DEFAULT_METHODS: { method: string; label: string; desc: string; icon: typeof Truck }[] = [
   { method: 'cod', label: 'Thanh toán khi nhận hàng (COD)', desc: 'Trả tiền mặt khi shipper giao hàng tới', icon: Truck },
@@ -435,15 +455,35 @@ export default function CheckoutPage() {
                       {form.payment_method === 'bank_transfer' && (
                         <div className="md:col-span-2">
                           <label className="block text-sm text-gray-600 mb-1.5">Ngân hàng của bạn *</label>
-                          <select
-                            value={form.payer_bank_name}
-                            onChange={(e) => setForm({ ...form, payer_bank_name: e.target.value })}
-                            className="input-field"
-                            required
-                          >
-                            <option value="">Chọn ngân hàng</option>
-                            {VIETNAM_BANKS.map((b) => <option key={b} value={b}>{b}</option>)}
-                          </select>
+                          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 max-h-64 overflow-y-auto pr-1">
+                            {VIETNAM_BANKS.map((b) => {
+                              const selected = form.payer_bank_name === b.name;
+                              return (
+                                <button
+                                  type="button"
+                                  key={b.code}
+                                  onClick={() => setForm({ ...form, payer_bank_name: b.name })}
+                                  aria-pressed={selected}
+                                  className={`flex flex-col items-center justify-center gap-1 rounded-lg border p-2 h-20 transition-colors ${
+                                    selected
+                                      ? 'border-primary ring-2 ring-primary/30 bg-primary/5'
+                                      : 'border-gray-200 hover:border-primary/50'
+                                  }`}
+                                >
+                                  <img
+                                    src={bankLogoUrl(b.code)}
+                                    alt={b.name}
+                                    loading="lazy"
+                                    className="h-7 w-auto max-w-[80%] object-contain"
+                                  />
+                                  <span className="text-[11px] text-gray-600 text-center leading-tight line-clamp-1">{b.name}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                          {form.payer_bank_name && (
+                            <p className="mt-1.5 text-xs text-gray-500">Đã chọn: <strong>{form.payer_bank_name}</strong></p>
+                          )}
                         </div>
                       )}
                       <div>
